@@ -1,0 +1,181 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+    <link rel="icon" href="https://cdn.iconscout.com/icon/free/png-256/coronavirus-2539707-2132287.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+
+
+    <style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+
+    <title>Covid-19 Data</title>
+</head>
+<body>
+
+<h3 style="color: grey" >
+    <b>Top 4 countries where COVID-19 has spread</b>
+</h3>
+
+<br>
+<div class="row">
+    <div class="col-md-5">
+
+        <div class="card-header text-white bg-info">
+            <h5>Table representation</h5>
+        </div>
+
+<table id="table" class="table table-striped">
+  <tr class="bg-secondary text-white">
+    <th>Country</th>
+    <th>Corona Positive</th>
+    <th>Death</th>
+  </tr>
+    {% for data in obj %}
+  <tr>
+    <td>{{data.countryName}}</td>
+    <td>{{data.coronaPositive}}</td>
+      <td>{{data.death}}</td>
+  </tr>
+    {% endfor %}
+     <tr>
+                                    <td id="name"><b>Total</b></td>
+                                    <td id="positive"><b></b></td>
+                                    <td id="death"><b></b></td>
+
+     </tr>
+</table>
+    </div>
+
+        <div class="col-md-7">
+
+            <div class="col-md-9">
+
+
+                <div class="card-header text-white bg-info">
+                        <h4>Bar chat representation</h4>
+                    </div>
+
+            <canvas id="myChart" width="400" height="400"></canvas>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+<script>
+    var table= document.getElementById("table");
+    var pos=0, death=0;
+
+        for(var i=1;i<table.rows.length-1;i++){
+
+        pos +=parseFloat(table.rows[i].cells[1].innerHTML);
+        pos = Math.round(pos);
+        death+= parseFloat(table.rows[i].cells[2].innerHTML);
+        death = Math.round(death);
+    }
+    console.log(death);
+
+    document.getElementById("positive").innerHTML = '<b>' + pos;
+
+    document.getElementById("death").innerHTML ='<b>' + death;
+
+
+
+        var indiaP=parseFloat(table.rows[2].cells[1].innerHTML);
+        var indiaD=parseFloat(table.rows[2].cells[2].innerHTML);
+
+        var usaP=parseFloat(table.rows[1].cells[1].innerHTML);
+        var usaD=parseFloat(table.rows[1].cells[2].innerHTML);
+
+        var brazilP=parseFloat(table.rows[3].cells[1].innerHTML);
+        var brazilD=parseFloat(table.rows[3].cells[2].innerHTML);
+
+        var russiaP=parseFloat(table.rows[4].cells[1].innerHTML);
+        var russiaD=parseFloat(table.rows[4].cells[2].innerHTML);
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['USA', 'India', 'Brazil', 'Russia'],
+        datasets: [{
+            label: '# Positive',
+            data: [usaP, indiaP , brazilP,russiaP],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 99, 132, 1)',
+
+
+            ],
+            borderWidth: 2
+        },
+        {
+            label: '# Death',
+            data: [usaD, indiaD , brazilD,russiaD],
+            backgroundColor: [
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+
+
+            ],
+            borderColor: [
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 159, 64, 1)',
+
+            ],
+            borderWidth: 2
+        }
+        ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: false
+                }
+            }]
+        }
+    }
+});
+</script>
+</html>
+
